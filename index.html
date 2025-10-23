@@ -17,6 +17,23 @@
         <button id="executeButton">Execute Code</button>
       </div>
     </div>
+
+    <div id="chatToggle">
+      <button id="chatButton">Chat with AI</button>
+    </div>
+
+    <div id="chatWindow">
+      <div id="chatHeader">
+        <h3>Gemini Chat</h3>
+        <button id="closeChat">&times;</button>
+      </div>
+      <div id="chatMessages"></div>
+      <div id="chatInput">
+        <input type="text" id="userInput" placeholder="Type your message..." />
+        <button id="sendMessage">Send</button>
+      </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
     <script type="module" src="script.js"></script>
   </body>

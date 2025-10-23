@@ -31,10 +31,10 @@ let controls; // Declare controls globally
 
 const loader = new GLTFLoader();
 loader.load(
-  "https://threejs.org/examples/models/gltf/Soldier.glb",
+  "https://threejs.org/examples/models/gltf/Horse.glb",
   function (gltf) {
     animatedModel = gltf.scene;
-    animatedModel.scale.set(0.5, 0.5, 0.5); // Make character 2 times bigger than previous (from 0.25)
+    animatedModel.scale.set(0.012, 0.012, 0.012); // Make character 5 times smaller than previous (from 0.06)
     animatedModel.position.set(0, 0, 0); // Center character in the scene
     scene.add(animatedModel);
 
@@ -43,6 +43,14 @@ loader.load(
       mixer.clipAction(clip).play();
     });
     loadedGltf = gltf; // Store the gltf object
+
+    // Apply a custom color to the horse
+    animatedModel.traverse((child) => {
+      if (child.isMesh) {
+        child.material = new THREE.MeshStandardMaterial({ color: 0x8b4513 }); // Brown color
+        child.material.needsUpdate = true;
+      }
+    });
   },
   undefined,
   function (error) {
@@ -106,8 +114,8 @@ document.getElementById("executeButton").addEventListener("click", () => {
 
 const exercises = [
   {
-    title: "Exercise 1: Make Character Run",
-    code: `// Goal: Make the character perform a running animation.
+    title: "Exercise 1: Make Horse Run",
+    code: `// Goal: Make the horse perform a running animation.
 // Hint: Use mixer.stopAllAction() and then play the 'run' animation clip.
 // Example:
 if (mixer && loadedGltf) {
@@ -116,13 +124,13 @@ if (mixer && loadedGltf) {
     if (clip) {
         mixer.clipAction(clip).play();
     } else {
-        console.warn("'run' animation clip not found.");
+        console.warn("'run' animation clip not found for horse.");
     }
 }`,
   },
   {
-    title: "Exercise 2: Make Character Jump",
-    code: `// Goal: Make the character perform a jumping animation and then return to a default pose.
+    title: "Exercise 2: Make Horse Jump",
+    code: `// Goal: Make the horse perform a jumping animation and then return to a default pose.
 // Hint: Look for a 'jump' animation clip. You might need to listen for the 'finished' event to transition back.
 // Example:
 if (mixer && loadedGltf) {
@@ -139,17 +147,17 @@ if (mixer && loadedGltf) {
             mixer.stopAllAction();
             const defaultClip = THREE.AnimationClip.findByName(loadedGltf.animations, 'idle');
             if (defaultClip) mixer.clipAction(defaultClip).play();
-            else console.warn("'idle' animation clip not found after jump.");
+            else console.warn("'idle' animation clip not found for horse after jump.");
         });
     } else {
-        console.warn("'jump' animation clip not found.");
+        console.warn("'jump' animation clip not found for horse.");
     }
 }`,
   },
   {
-    title: "Exercise 3: Make Character Fall",
-    code: `// Goal: Make the character perform a falling/fail animation or pose.
-// Hint: Look for a 'fall' or 'death' animation, or manually set the character's rotation/position.
+    title: "Exercise 3: Make Horse Fall",
+    code: `// Goal: Make the horse perform a falling/fail animation or pose.
+// Hint: Look for a 'fall' or 'death' animation, or manually set the horse's rotation/position.
 // Example:
 if (mixer && loadedGltf) {
     mixer.stopAllAction();
@@ -160,7 +168,7 @@ if (mixer && loadedGltf) {
         action.reset();
         action.play();
     } else {
-        console.warn("'fall' animation clip not found. Applying a generic prone pose.");
+        console.warn("'fall' animation clip not found for horse. Applying a generic prone pose.");
         animatedModel.rotation.x = Math.PI / 2; // Lie face down
         animatedModel.position.y = -0.5; // Adjust position to be on the ground
         animatedModel.position.z = 0; // Ensure it's still centered in Z
@@ -168,8 +176,8 @@ if (mixer && loadedGltf) {
 }`,
   },
   {
-    title: "Exercise 4: Make Character Run Faster",
-    code: `// Goal: Make the character's 'run' animation play at a faster speed.
+    title: "Exercise 4: Make Horse Run Faster",
+    code: `// Goal: Make the horse's 'run' animation play at a faster speed.
 // Hint: Get the 'run' animation action and use setEffectiveTimeScale().
 // Example:
 if (mixer && loadedGltf) {
@@ -180,14 +188,14 @@ if (mixer && loadedGltf) {
         action.setEffectiveTimeScale(2.5); // Play animation 2.5 times faster
         action.play();
     } else {
-        console.warn("'run' animation clip not found.");
+        console.warn("'run' animation clip not found for horse.");
     }
 }`,
   },
   {
-    title: "Exercise 5: Make Character Walk Back",
-    code: `// Goal: Make the character perform a 'walk' animation and move backward in the scene.
-// Hint: Play the 'walk' animation. In the animate loop, decrease the character's Z-position.
+    title: "Exercise 5: Make Horse Walk Back",
+    code: `// Goal: Make the horse perform a 'walk' animation and move backward in the scene.
+// Hint: Play the 'walk' animation. In the animate loop, decrease the horse's Z-position.
 // Example:
 if (mixer && loadedGltf) {
     mixer.stopAllAction();
@@ -197,8 +205,7 @@ if (mixer && loadedGltf) {
         action.setEffectiveTimeScale(1);
         action.play();
         
-        // Animate movement backward (this part goes in the main animate() loop if continuous)
-        // For a one-shot movement in exercise context, we can simulate:
+        // Animate movement backward
         let walkBackDistance = 0;
         const maxWalkBackDistance = 3; // units
         const walkSpeed = 0.02; // units per frame
@@ -212,18 +219,15 @@ if (mixer && loadedGltf) {
             }
         }, 1000 / 60); // Roughly 60 frames per second
 
-        // IMPORTANT: In a real app, you'd integrate this movement into the main animate loop
-        // and manage animation state. For an exercise, this gives a quick demonstration.
-
     } else {
-        console.warn("'walk' animation clip not found.");
+        console.warn("'walk' animation clip not found for horse.");
     }
 }`,
   },
   {
-    title: "Exercise 6: Make Character Walk Ahead",
-    code: `// Goal: Make the character perform a 'walk' animation and move forward in the scene.
-// Hint: Play the 'walk' animation. In the animate loop, increase the character's Z-position (or decrease if camera is behind).
+    title: "Exercise 6: Make Horse Walk Ahead",
+    code: `// Goal: Make the horse perform a 'walk' animation and move forward in the scene.
+// Hint: Play the 'walk' animation. In the animate loop, increase the horse's Z-position (or decrease if camera is behind).
 // Example:
 if (mixer && loadedGltf) {
     mixer.stopAllAction();
@@ -248,29 +252,19 @@ if (mixer && loadedGltf) {
         }, 1000 / 60); // Roughly 60 frames per second
 
     } else {
-        console.warn("'walk' animation clip not found.");
+        console.warn("'walk' animation clip not found for horse.");
     }
 }`,
   },
   {
-    title: "Exercise 9: Move Camera Around Character",
-    code: `// Goal: Animate the camera to orbit around the character.
+    title: "Exercise 9: Move Camera Around Horse",
+    code: `// Goal: Animate the camera to orbit around the horse.
 // Hint: Modify camera.position.x and camera.position.z using Math.sin/cos and then camera.lookAt().
 // This code needs to be integrated into the main animation loop to be continuous.
 // Example (Paste this into the editor and click 'Execute Code'):
 
 let cameraOrbitTime = 0; // Initialize a time variable
 
-// We need to modify the main animate loop for continuous camera movement.
-// For an exercise, you might just demonstrate one full orbit or a fixed movement.
-
-// To make this a continuous exercise, you would typically inject this into the main animate function
-// or manage it with a separate AnimationMixer for the camera.
-
-// For a direct exercise demonstration, you can see the effect by repeatedly clicking 'Execute Code'
-// or modifying the main animate loop directly (which is beyond this exercise's scope).
-
-// For a single orbit demonstration (click execute once):
 const orbitDuration = 2000; // milliseconds
 const startPosition = camera.position.clone();
 const target = animatedModel.position;
@@ -284,43 +278,26 @@ new TWEEN.Tween({ t: 0 })
         camera.position.x = target.x + Math.sin(angle) * radius;
         camera.position.z = target.z + Math.cos(angle) * radius;
         camera.lookAt(target);
-        if (controls) controls.update(); // Update controls if damping is enabled
+        if (controls) controls.update();
     })
     .start();
 
 // Note: TWEEN.js is not imported by default. This example assumes it's available or imported separately.
-// For simpler exercises, stick to direct manipulation or basic timers.
-
-// Simpler example that modifies main animate loop (requires user to modify script.js directly):
-/*
-function animate() {
-    requestAnimationFrame(animate);
-    // ... other updates ...
-
-    camera.position.x = Math.sin(cameraOrbitTime * 0.01) * 7;
-    camera.position.z = Math.cos(cameraOrbitTime * 0.01) * 7;
-    camera.lookAt(animatedModel.position);
-    cameraOrbitTime += 1;
-
-    // ... render scene ...
-}
-*/
-
 // For this exercise, we will just set the camera to a new position:
 camera.position.set(5, 5, 5); // New camera position
-camera.lookAt(animatedModel.position); // Look at the character
+camera.lookAt(animatedModel.position); // Look at the horse
 if (controls) controls.update();`,
   },
   {
-    title: "Exercise 10: Add a Simple Ground Plane",
-    code: `// Goal: Add a flat ground plane to the scene below the character.
+    title: "Exercise 10: Add a Simple Ground Plane for Horse",
+    code: `// Goal: Add a flat ground plane to the scene below the horse.
 // Hint: Use PlaneGeometry and MeshStandardMaterial. Remember to rotate it flat and position it correctly.
 // Example:
 const groundGeometry = new THREE.PlaneGeometry(20, 20);
 const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x666666 });
 const ground = new THREE.Mesh(groundGeometry, groundMaterial);
 ground.rotation.x = -Math.PI / 2; // Rotate to be horizontal
-ground.position.y = -0.5; // Position below character
+ground.position.y = -0.5; // Position below horse
 scene.add(ground);
 
 // Add lights if not already present (main scene already has them)
@@ -331,15 +308,14 @@ scene.add(ground);
 // scene.add(directionalLight);`,
   },
   {
-    title: "Exercise 11: Animate Character Scale",
-    code: `// Goal: Make the character grow and shrink over time.
+    title: "Exercise 11: Animate Horse Scale",
+    code: `// Goal: Make the horse grow and shrink over time.
 // Hint: Modify animatedModel.scale in the animation loop using Math.sin().
 // This code needs to be integrated into the main animation loop to be continuous.
 // Example (Paste this into the editor and click 'Execute Code'):
 
 let scaleTime = 0; // Initialize a time variable
 
-// For an exercise demonstration, we can simulate a one-shot scaling effect
 const initialScale = animatedModel.scale.x;
 const scaleDuration = 1500; // milliseconds
 
@@ -354,22 +330,6 @@ new TWEEN.Tween({ t: 0 })
     .start();
 
 // Note: TWEEN.js is not imported by default. This example assumes it's available or imported separately.
-// For simpler exercises, stick to direct manipulation or basic timers.
-
-// Simpler example that modifies main animate loop (requires user to modify script.js directly):
-/*
-function animate() {
-    requestAnimationFrame(animate);
-    // ... other updates ...
-
-    const scaleFactor = 0.5 + (Math.sin(scaleTime * 0.05) * 0.2);
-    animatedModel.scale.set(scaleFactor, scaleFactor, scaleFactor);
-    scaleTime += 0.5;
-
-    // ... render scene ...
-}
-*/
-
 // For this exercise, we will just set the character to a new scale:
 animatedModel.scale.set(1, 1, 1); // Make it temporarily much larger
 if (controls) controls.update();`,
@@ -390,7 +350,7 @@ function loadExercise(exerciseIndex) {
   if (animatedModel) {
     animatedModel.position.set(0, 0, 0); // Reset character position to center
     animatedModel.rotation.set(0, 0, 0);
-    animatedModel.scale.set(0.5, 0.5, 0.5); // Ensure consistent 2x bigger scale
+    animatedModel.scale.set(0.012, 0.012, 0.012); // Ensure consistent even smaller scale
     // Reset animations if a mixer exists
     if (mixer && loadedGltf) {
       mixer.stopAllAction();
@@ -400,14 +360,8 @@ function loadExercise(exerciseIndex) {
       });
     }
     // After loading, ensure the camera is positioned to view the model
-    if (controls) {
-      controls.target.copy(animatedModel.position);
-      controls.update();
-    } else {
-      // Fallback if controls aren't initialized yet (e.g., initial load before model is ready)
-      camera.position.set(0, 5, 20); // Adjust camera position for the even larger character
-      camera.lookAt(animatedModel.position);
-    }
+    camera.position.set(3, 0.1, 0); // Adjust camera position to view from the side
+    camera.lookAt(animatedModel.position);
   }
   // Show the entire controls panel when an exercise is loaded
   document.getElementById("controlsPanel").style.display = "flex";
@@ -439,3 +393,89 @@ exercises.forEach((exercise, index) => {
 
 // Load the first exercise by default
 loadExercise(0);
+
+// Chatbot functionality
+const chatButton = document.getElementById("chatButton");
+const chatWindow = document.getElementById("chatWindow");
+const closeChat = document.getElementById("closeChat");
+const chatMessages = document.getElementById("chatMessages");
+const userInput = document.getElementById("userInput");
+const sendMessage = document.getElementById("sendMessage");
+
+chatButton.addEventListener("click", () => {
+  chatWindow.style.display =
+    chatWindow.style.display === "flex" ? "none" : "flex";
+});
+
+closeChat.addEventListener("click", () => {
+  chatWindow.style.display = "none";
+});
+
+sendMessage.addEventListener("click", () => {
+  const message = userInput.value.trim();
+  if (message) {
+    appendMessage(message, "user-message");
+    userInput.value = "";
+    // Placeholder for AI response
+    sendToGeminiAPI(message);
+  }
+});
+
+userInput.addEventListener("keypress", (event) => {
+  if (event.key === "Enter") {
+    sendMessage.click();
+  }
+});
+
+function appendMessage(message, type) {
+  const messageElement = document.createElement("div");
+  messageElement.classList.add("chat-message", type);
+  const p = document.createElement("p");
+  p.textContent = message;
+  messageElement.appendChild(p);
+  chatMessages.appendChild(messageElement);
+  chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to bottom
+}
+
+// Placeholder for Gemini API integration
+async function sendToGeminiAPI(userMessage) {
+  appendMessage("Typing...", "ai-message"); // Show typing indicator
+
+  // !!! IMPORTANT: This is a placeholder. You need to implement the actual API call.
+  // This would typically involve a server-side proxy to keep your API key secure.
+
+  // Example of how you *might* call an API (DO NOT USE THIS DIRECTLY IN CLIENT-SIDE CODE WITH REAL API KEY)
+  /*
+  try {
+    const response = await fetch('YOUR_BACKEND_ENDPOINT_FOR_GEMINI', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message: userMessage }),
+    });
+    const data = await response.json();
+    chatMessages.lastChild.remove(); // Remove typing indicator
+    appendMessage(data.aiResponse, "ai-message");
+  } catch (error) {
+    console.error("Error communicating with Gemini API:", error);
+    chatMessages.lastChild.remove();
+    appendMessage("AI: I'm sorry, I couldn't connect to the AI service.", "ai-message");
+  }
+  */
+
+  // --- Mock AI Response for demonstration ---
+  setTimeout(() => {
+    chatMessages.lastChild.remove(); // Remove typing indicator
+    const aiResponses = [
+      "Hello! How can I help you with Three.js today?",
+      "That's an interesting challenge! What Three.js concepts are you trying to use?",
+      "I can help you with creating geometries, materials, lighting, and animations.",
+      "What specific problem are you encountering?",
+      "Remember to check the Three.js documentation for detailed API references.",
+    ];
+    const randomResponse =
+      aiResponses[Math.floor(Math.random() * aiResponses.length)];
+    appendMessage(`AI: ${randomResponse}`, "ai-message");
+  }, 1000 + Math.random() * 1500); // Simulate network delay
+}
