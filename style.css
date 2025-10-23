@@ -216,3 +216,27 @@ canvas {
 #sendMessage:hover {
   background-color: #3367d6;
 }
+
+/* Styles for the container of action buttons (Execute, Solution) */
+#action-buttons-container {
+  display: flex;
+  gap: 10px; /* Space between buttons */
+  margin-top: 10px; /* Space above the buttons */
+  justify-content: flex-end; /* Align buttons to the right */
+}
+
+/* Styles for the Solution button */
+.solution-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #28a745; /* Green color for solution button */
+  color: white;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.solution-button:hover {
+  background-color: #218838;
+}
