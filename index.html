@@ -7,9 +7,16 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="editor"></div>
-    <button id="executeButton">Execute Code</button>
-    <select id="exerciseSelect"></select>
+    <div id="appContainer">
+      <div id="characterPanel">
+        <!-- Three.js canvas will be appended here -->
+        <div id="exerciseButtons"></div>
+      </div>
+      <div id="controlsPanel">
+        <div id="editor"></div>
+        <button id="executeButton">Execute Code</button>
+      </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
     <script type="module" src="script.js"></script>
   </body>

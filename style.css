@@ -1,35 +1,95 @@
 body {
   margin: 0;
   overflow: hidden;
+  position: relative; /* For absolute positioning of controlsPanel */
 }
 
 canvas {
   display: block;
+  width: 100%; /* Ensure canvas fills its parent */
+  height: 100%;
+}
+
+#appContainer {
+  width: 100vw;
+  height: 100vh;
+  position: relative; /* For stacking children */
+}
+
+#characterPanel {
+  background-color: white; /* White background for the character panel */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw; /* Occupy full viewport width */
+  height: 100vh; /* Occupy full viewport height */
+  position: absolute; /* Make it an overlay filling the entire screen */
+  top: 0;
+  left: 0;
+}
+
+#controlsPanel {
+  display: flex;
+  flex-direction: column;
+  background-color: #272822; /* Editor background color */
+  padding: 10px; /* Add some padding around controls */
+  box-sizing: border-box; /* Include padding in width/height */
+  justify-content: space-between; /* Push editor to top, button to bottom */
+  display: none; /* Initially hide the entire controls panel */
+  position: absolute; /* Make it an overlay */
+  bottom: 0; /* Align to bottom */
+  left: 0; /* Align to left */
+  width: 100%; /* Take full viewport width */
+  height: 30%; /* Take 30% of viewport height */
+  z-index: 100; /* Ensure it appears above the character panel */
 }
 
 #editor {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 400px;
-  height: 100%;
+  width: 100%; /* Fill the leftPanel */
+  height: 100%; /* Editor should grow to fill available space */
   font-size: 16px;
 }
 
 #executeButton {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
+  align-self: flex-end; /* Align button to the right within flex column */
 }
 
-#exerciseSelect {
+#exerciseButtons {
   position: absolute;
   top: 10px;
-  right: 10px;
-  padding: 5px 10px;
-  font-size: 16px;
-  z-index: 100;
+  left: 10px; /* Position within characterPanel */
+  width: 250px; /* A fixed width for the buttons panel */
+  max-height: calc(100% - 20px); /* Fill height minus top/bottom padding */
+  overflow-y: auto; /* Enable scrolling if many exercises */
+  background-color: transparent; /* Transparent as it's within leftPanel */
+  padding: 10px;
+  box-sizing: border-box;
+  z-index: 10; /* Ensure it's above the canvas */
+}
+
+.exercise-button {
+  display: block;
+  width: 100%; /* Full width within its container */
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #61afef; /* A nice blue color for buttons */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.exercise-button:hover {
+  background-color: #5289c9;
+}
+
+.active-exercise-button {
+  background-color: black; /* Black background for the active button */
+  color: white; /* Ensure text remains visible */
 }
